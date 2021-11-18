@@ -23,48 +23,48 @@ const client = new MongoClient(uri, {
 const server = async () => {
   try {
     await client.connect();
-    const database = client.db("e_property");
+    const database = client.db("bd_car_house");
     const userCollection = database.collection("users");
     const orderCollection = database.collection("orders");
     const reviewCollection = database.collection("reviews");
-    const apartmentCollection = database.collection("apartments");
+    const carCollection = database.collection("cars");
 
     // getting product with id
-    app.get("/apartment/:id", async (req, res) => {
+    app.get("/car/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
 
-      const result = await apartmentCollection.findOne(query);
+      const result = await carCollection.findOne(query);
 
       res.json(result);
     });
 
-    // getting all the glasses
-    app.get("/apartments", async (req, res) => {
+    // getting all the cars
+    app.get("/cars", async (req, res) => {
       const limit = +req.query.limit;
 
       let result;
       if (limit) {
-        result = await apartmentCollection
+        result = await carCollection
           .find({})
           .sort({ _id: -1 })
           .limit(limit)
           .toArray();
       } else {
-        result = await apartmentCollection.find({}).toArray();
+        result = await carCollection.find({}).toArray();
       }
 
       res.json(result);
     });
 
     // add new glass
-    app.post("/apartments", async (req, res) => {
-      const result = await apartmentCollection.insertOne(req.body);
+    app.post("/cars", async (req, res) => {
+      const result = await carCollection.insertOne(req.body);
       res.send(result);
     });
 
-    app.delete("/apartments/:id", async (req, res) => {
-      const result = await apartmentCollection.deleteOne({
+    app.delete("/cars/:id", async (req, res) => {
+      const result = await carCollection.deleteOne({
         _id: ObjectId(req.params.id),
       });
 
@@ -171,7 +171,7 @@ const server = async () => {
     });
 
     //
-    console.log("eProperty database is connected");
+    console.log("bd_car_house database is connected");
   } finally {
     // await client.close();
   }
@@ -180,11 +180,11 @@ server().catch(console.dir);
 
 // getting server
 app.get("/", (req, res) => {
-  console.log("eProperty's Server is running on", port);
-  res.send("Welcome to eProperty server!");
+  console.log("bd_car_house's Server is running on", port);
+  res.send("Welcome to bd_car_house server!");
 });
 
 // running server on port
 app.listen(port, () => {
-  console.log(`eProperty is running on http://localhost:${port}/`);
+  console.log(`bd_car_house is running on http://localhost:${port}/`);
 });
