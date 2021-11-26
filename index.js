@@ -11,15 +11,18 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 
 // create uri
+
 const uri =`${process.env.DB_HOST}://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.a8pyd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 // new client
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 // server connection
+
 const server = async () => {
   try {
     await client.connect();
@@ -30,6 +33,7 @@ const server = async () => {
     const carCollection = database.collection("cars");
 
     // getting product with id
+
     app.get("/car/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -40,6 +44,7 @@ const server = async () => {
     });
 
     // getting all the cars
+
     app.get("/cars", async (req, res) => {
       const limit = +req.query.limit;
 
@@ -58,6 +63,7 @@ const server = async () => {
     });
 
     // add new glass
+
     app.post("/cars", async (req, res) => {
       const result = await carCollection.insertOne(req.body);
       res.send(result);
@@ -72,6 +78,7 @@ const server = async () => {
     });
 
     // get all reviews
+
     app.get("/reviews", async (req, res) => {
       const result = await reviewCollection.find({}).toArray();
 
@@ -79,6 +86,7 @@ const server = async () => {
     });
 
     // get all users
+
     app.get("/users", async (req, res) => {
       const result = await userCollection.find({}).toArray();
 
@@ -86,6 +94,7 @@ const server = async () => {
     });
 
     // get a user
+
     app.get("/user/:email", async (req, res) => {
       const result = await userCollection.findOne({ email: req.params.email });
 
@@ -93,6 +102,7 @@ const server = async () => {
     });
 
     // add a review
+
     app.post("/review", async (req, res) => {
       const review = req.body;
 
@@ -101,6 +111,7 @@ const server = async () => {
     });
 
     // add a order
+
     app.post("/order", async (req, res) => {
       const order = req.body;
 
@@ -109,6 +120,7 @@ const server = async () => {
     });
 
     // get all order
+
     app.get("/orders", async (req, res) => {
       const email = req.query.email;
       console.log(email);
@@ -124,6 +136,7 @@ const server = async () => {
     });
 
     // delete order
+
     app.delete("/order/:id", async (req, res) => {
       const result = await orderCollection.deleteOne({
         _id: ObjectId(req.params.id),
@@ -133,6 +146,7 @@ const server = async () => {
     });
 
     // approve order
+
     app.put("/order", async (req, res) => {
       const id = req.query.id;
       const order = req.body;
@@ -155,6 +169,7 @@ const server = async () => {
     });
 
     // add user to db
+
     app.put("/users", async (req, res) => {
       const userData = req.body;
       const filter = { email: userData.email };
@@ -173,18 +188,22 @@ const server = async () => {
     //
     console.log("bd_car_house database is connected");
   } finally {
+
     // await client.close();
+
   }
 };
 server().catch(console.dir);
 
 // getting server
+
 app.get("/", (req, res) => {
   console.log("bd_car_house's Server is running on", port);
   res.send("Welcome to bd_car_house server!");
 });
 
 // running server on port
+
 app.listen(port, () => {
   console.log(`bd_car_house is running on http://localhost:${port}/`);
 });
